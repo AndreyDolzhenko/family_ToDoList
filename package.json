@@ -1,0 +1,28 @@
+{
+  "name": "family_todolist",
+  "version": "1.0.0",
+  "description": "This application for working with family tasks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreyDolzhenko/family_ToDoList.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndreyDolzhenko/family_ToDoList/issues"
+  },
+  "homepage": "https://github.com/AndreyDolzhenko/family_ToDoList#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7"
+  }
+}
