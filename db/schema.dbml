@@ -1,0 +1,58 @@
+```dbml
+Table users {
+  id integer [pk, increment]
+  name varchar (255) [not null]
+  team varchar (255)
+  created_at datetime [not null, default: `now()`]
+  updated_at datetime [not null, default: `now()`]    
+}
+
+Table tasks {
+  id integer [pk, increment]
+  name varchar [not null]
+  customer varchar (225) [not null]
+  performer varchar (225)
+  due_date datetime [not null]
+  completion_date datetime [not null]
+  created_at datetime [not null, default: `now()`]
+  updated_at datetime [not null, default: `now()`]
+}
+
+Table subjects {
+  id integer [pk, increment]
+  name varchar [not null]  
+  time_start timestamp [not null]
+  time_end timestamp [not null]
+}
+
+Table instituts {
+  id integer [pk, increment]
+  name varchar [not null]
+  user_id integer [ref: > users.id]
+}
+
+Table user_tasks {
+  user_id integer [not null, ref: > users.id]
+  task_id integer [not null, ref: > tasks.id]
+  Indexes {
+    (user_id, task_id) [pk]
+  }
+}
+
+// Table user_instituts {
+//   user_id integer [not null, ref: > users.id]
+//   institute_id integer [not null, ref: > instituts.id]
+//   Indexes {
+//     (user_id, institute_id) [pk]
+//   }
+// }
+
+Table user_subjects {
+  user_id integer [not null, ref: > users.id]
+  subject_id integer [not null, ref: > subjects.id]
+  Indexes {
+    (user_id, subject_id) [pk]
+  }
+}
+
+```
