@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("UserTasks", {
-      user_id: {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable("PerformerTasks", {
+      performer_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
-        references: { model: "Users", key: "id" },
+        references: { model: "Performers", key: "id" },
         onDelete: "CASCADE",
       },
       task_id: {
@@ -21,12 +21,12 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     /**
      * Add reverting commands here.
      *
      * Example:
      * await queryInterface.dropTable('users');
      */
-  },
+  }
 };

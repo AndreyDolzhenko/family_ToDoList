@@ -11,7 +11,7 @@ module.exports = {
         references: { model: "Users", key: "id" },
         onDelete: "CASCADE",
       },
-      task_id: {
+      institute_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
