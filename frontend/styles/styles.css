@@ -1,0 +1,94 @@
+@charset "utf-8";
+@import url(./fonts.css);
+@import url(./reset.css);
+@import url(./variables.css);
+
+body {
+    background: var(--basicBG);
+    font-size: var(--basicFS);
+    color: var(--basicColor);
+}
+
+h1 {
+    font-family: Imperial;    
+    font-size: 2em;
+    text-align: center;
+    margin: 1em 0;
+    color: darkgoldenrod;
+}
+
+input, select {
+    border-radius: 5px;
+    background: aliceblue;
+}
+
+input:focus, select:focus {
+    background: floralwhite;
+    color: darkgoldenrod;
+}
+
+input[type="submit"] {
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background: lightgoldenrodyellow;
+    color: darkgoldenrod;
+    box-shadow: 2px 2px var(--basicColor);
+}
+
+input[type="submit"]:active {
+    background: lightgoldenrodyellow;
+    color: darkgoldenrod;
+    box-shadow: 1px 1px var(--basicColor);
+}
+
+select {
+    height: 1.59em;
+    border: 2px solid black;
+}
+
+header>form {
+    text-align: end;  
+    float: right;
+    margin: 1em; 
+}
+
+table {
+    width: 100%;
+    margin: 0 2em;
+}
+
+.workPlace tr td {
+    border: 1px solid var(--basicColor);
+}
+
+.content {
+    width: 95%;
+}
+
+.choiceOfWorkplace {
+    cursor: pointer;
+}
+
+.exitArrow {
+    margin: 20px;
+    font-size: 2em;    
+    background: aliceblue;
+    border-radius: 5px;
+    padding: 0 10px;    
+    cursor: pointer;
+    color: var(--basicColor);
+}
+
+.exitArrow:hover {
+    background: lightgoldenrodyellow;
+    color: darkgoldenrod;
+    box-shadow: 2px 2px var(--basicColor);
+}
+
+.exitArrow:active {
+    background: lightgoldenrodyellow;
+    color: darkgoldenrod;
+    box-shadow: 1px 1px var(--basicColor);
+}

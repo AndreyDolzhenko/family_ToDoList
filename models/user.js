@@ -11,12 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasMany(models.Task, { foreignKey: 'task_id' });
-      User.belongsToMany(models.Subjects, { foreignKey: 'subject_id' });
-      User.belongsToMany(models.Institutes, { foreignKey: 'institute_id' });
+      // User.belongsToMany(models.Subjects, { foreignKey: 'subject_id' });
+      // User.belongsToMany(models.Institutes, { foreignKey: 'institute_id' });
     }
   }
-  User.init({
-    id: DataTypes.INTEGER,
+  User.init({        
     name: DataTypes.STRING,
     team: DataTypes.STRING
   }, {

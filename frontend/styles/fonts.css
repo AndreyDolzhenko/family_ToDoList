@@ -1,0 +1,17 @@
+@font-face {
+    font-family: RBase;
+    src: url('../fonts/Roboto/Roboto-VariableFont_wdth\,wght.ttf') format("truetype");
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    font-size: var(--basicFS);
+}
+
+@font-face {
+    font-family: Imperial;
+    src: url('../fonts/Imperial_Script/ImperialScript-Regular.ttf') format("truetype");
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+    font-size: var(--basicFS);
+}
