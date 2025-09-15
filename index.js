@@ -60,6 +60,7 @@ app.get("/", (req, res) => {
       <ul>
         <li><a href="/tasks.html">Управление задачами</a></li>
         <li><a href="/registration.html">Регистрация</a></li>
+        <li><a href="/admin.html">Admin page</a></li>
       </ul>    
     </body>
   `);

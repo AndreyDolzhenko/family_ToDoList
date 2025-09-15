@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin page</title>
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./favicon_io/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./favicon_io/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./favicon_io/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+    <style>
+      ul,
+      ol {
+        margin: 20px 10px 20px 50px;
+        line-height: 1.5;
+        font-size: 1.2em;
+        font-family: cursive;
+      }
+
+      li {
+        width: fit-content;
+        transition: border-bottom 1s;
+        border-bottom: 1px solid transparent;
+        cursor: pointer;
+      }
+
+      li:hover {
+        border-bottom: 1px solid currentColor;
+      }
+
+      main::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      .controlOperations {
+        float: left;
+        width: 40%;
+      }
+
+      #options {
+        width: 50%;
+        float: left;
+        border: 1px dashed var(--basicColor);
+      }
+
+      #usersOperationsField {
+        display: none;
+      }
+
+      #controlField {
+        float: inline-start;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <header>
+        <a href="/" class="exitArrow">&#11013;</a>
+      </header>
+      <main>
+        <div>
+          <section class="controlOperations">
+            <ul>
+              <li id="usersOperationsList">Working with users</li>
+              <li id="tasksOperationsList">Working with tasks</li>
+            </ul>
+          </section>
+  
+          <section id="options"></section>
+          <div id="usersOperationsField">
+            <p>Operations list:</p>
+            <ul>
+              <li id="addUser">Add user</li>
+              <li id="editUser">Edit user</li>
+              <li id="deleteUser">Delete user</li>
+            </ul>
+          </div>
+        </div>
+
+        <form id="addUserForm" style="display: none">
+          <fieldset>
+            <legend>User data</legend>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="name"
+              required
+            />
+            <select id="team">
+              <option disabled selected>team</option>
+              <option value="family">family</option>
+              <option value="other">other</option>
+            </select>
+            <input type="password" placeholder="password" />
+            <input type="submit" value="Send" />
+          </fieldset>
+        </form>
+
+        
+
+        <ol id="controlField"></ol>
+      </main>
+      <footer></footer>
+    </div>
+    <script src="./src/popup.js"></script>
+    <script src="./src/admin.js"></script>
+  </body>
+</html>

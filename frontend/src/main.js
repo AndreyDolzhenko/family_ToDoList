@@ -1,6 +1,8 @@
 const choiceOfWorkplace = document.getElementsByClassName("choiceOfWorkplace");
 const workPlace = document.getElementsByClassName("workPlace");
 const allTd = document.querySelectorAll("td");
+const autho = document.getElementById("autho");
+const wellcome = document.getElementById("wellcome");
 
 for (let index = 0; index < choiceOfWorkplace.length; index++) {
   choiceOfWorkplace[index].addEventListener("click", (event) => {
@@ -11,7 +13,7 @@ for (let index = 0; index < choiceOfWorkplace.length; index++) {
   });
 }
 
-console.log(currentYearCalender(2, 2025));
+// console.log(currentYearCalender(2, 2025));
 
 const choiseOfPeriod = () => {
   const day = new Date().getDate();
@@ -27,3 +29,27 @@ const choiseOfPeriod = () => {
     console.log(date.setDate(date.getDate() + index), month, year);
   }
 };
+
+autho.addEventListener("keyup", async (event) => {
+  // event.key == "Enter" ? console.log(event.target.value) : false;
+
+  if (event.key == "Enter") {
+    const response = await fetch("/api/users");
+    const data = await response.json();
+    let name = "Нет такого пользователя. Зарегистрируйтесь!";
+    let found = false;
+
+    data.forEach((el) => {
+      if (event.target.value === el.name) {
+        name = el.name;
+        wellcome.innerHTML = `Добро пожаловать, ${name}!`;
+        console.log(name);
+        found = true;
+      }
+    });
+
+    if (!found) {
+      wellcome.textContent = name;
+    }
+  }
+});
