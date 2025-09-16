@@ -28,6 +28,10 @@ h1 {
     color: darkgoldenrod;
 }
 
+li {
+    margin-left: 20px;
+}
+
 input, select {
     border-radius: 5px;
     background: aliceblue;
@@ -123,4 +127,16 @@ table {
     background: lightgoldenrodyellow;
     color: darkgoldenrod;
     box-shadow: 1px 1px var(--basicColor);
+}
+
+#scheduleDescription {
+    display: none;
+}
+
+#tasksDescription {
+    display: none;
+}
+
+.buttonOfTasks {
+    display: none;
 }

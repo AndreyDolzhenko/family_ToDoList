@@ -39,11 +39,21 @@
     
           <table class="workPlace">
             <tr>
-                <td class="choiceOfWorkplace">Tasks</td>
-                <td class="choiceOfWorkplace">Schedule</td>
+                <td id="tasksTop" class="choiceOfWorkplace">
+                  Tasks 
+                  <button id="addTask" class="buttonOfTasks">add task</button>
+                  <button id="recordTask" class="buttonOfTasks">record task</button>
+                </td>
+                <td id="scheduleTop" class="choiceOfWorkplace">Schedule</td>
             </tr>
             <tr>
-                <td colspan="2">Tasks description</td>
+                <td id="tasksDescription" colspan="2">
+                  <u>Tasks description</u>
+                  <ol id="listAllTasks"></ol>
+                </td>                
+            </tr>
+            <tr>               
+                <td id="scheduleDescription" colspan="2"><u>Schedule description</u></td>
             </tr>
           </table>
         </main>

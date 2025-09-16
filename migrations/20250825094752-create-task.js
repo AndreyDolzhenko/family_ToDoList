@@ -15,10 +15,10 @@ module.exports = {
       },
       customer: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       performer: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       due_date: {
         type: Sequelize.DATE
