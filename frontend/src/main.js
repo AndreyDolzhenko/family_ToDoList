@@ -36,17 +36,11 @@ const getScheduleByName = async (name) => {
 // Запись нового значения в расписании по name
 
 const updateScheduleByName = async (name, content) => {
-
-  const result = await fetch(`/api/schedule/${name}`);
-  const data = await result.json();
-  const id = data.id;
-
-  console.log("data - ", id);
   
-  await fetch(`/api/schedule/${id}`, {
+  await fetch(`/api/schedule/${name}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, content }),
+    body: JSON.stringify({ name, content }),
   });
 
   
