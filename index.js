@@ -75,6 +75,9 @@ app.get("/", (req, res) => {
 const userRoutes = require("./routes/user.routes");
 app.use("/api/users", userRoutes);
 
+const scheduleRoutes = require("./routes/schedule.routes");
+app.use("/api/schedule", scheduleRoutes);
+
 const instituteRoutes = require("./routes/institute.routes");
 app.use("/api/institutes", instituteRoutes);
 

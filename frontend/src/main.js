@@ -14,11 +14,145 @@ const buttonOfTasks = document.getElementsByClassName("buttonOfTasks");
 
 let curentUserId = 0;
 
-scheduleTop.addEventListener("click", (event) => scheduleManagment());
+scheduleTop.addEventListener("click", (event) => {
+  scheduleManagment();
+  createYearPlane();
+});
 tasksTop.addEventListener("click", (event) => tasksManagment());
 
 addTask.addEventListener("click", (event) => taskTableCreate());
 recordTask.addEventListener("click", (event) => taskRecording());
+
+// Получение расписания по name
+
+const getScheduleByName = async (name) => {
+  const result = await fetch(`/api/schedule/${name}`);
+  const data = await result.json();
+  const id = data.id;
+  console.log("data - ", id);
+  // return id;
+};
+
+// Запись нового значения в расписании по name
+
+const updateScheduleByName = async (name, content) => {
+
+  const result = await fetch(`/api/schedule/${name}`);
+  const data = await result.json();
+  const id = data.id;
+
+  console.log("data - ", id);
+  
+  await fetch(`/api/schedule/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, content }),
+  });
+
+  
+};
+
+// Формирование календаря на год
+
+const createYearPlane = () => {
+  scheduleDescription.textContent = "";
+  // const currentYearCalenderTable = currentYearCalender(2, 2025);
+  // console.log(currentYearCalenderTable);
+
+  const week = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const table = document.createElement("table");
+  table.style.margin = "0";
+
+  for (let index = 7; index <= 20; index++) {
+    const tr = document.createElement("tr");
+
+    week.map((el) => {
+      const td = document.createElement("td");
+      td.style.width = `var(--tdWith)`;
+      td.style.height = "20px";
+
+      td.className = "scheduleCell";
+      td.id = el + index;
+
+      td.addEventListener("contextmenu", (event) => {
+        console.log(event.target.lastChild.type);
+
+        const name = event.target.id;
+
+        console.log("ID - ", getScheduleByName(event.target.id));
+
+        if (event.target.lastChild.type != "text") {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.value = event.target.id;
+
+          input.addEventListener("keyup", (event) => {
+            if (event.key === "Enter") {
+              td.lastChild.textContent = input.value;
+              const content = input.value;
+              // console.log(td.lastChild.type);
+              updateScheduleByName(name, content);
+              input.remove();
+            }
+          });
+
+          td.prepend(input);
+        }
+      });
+
+      if (index == 7) {
+        td.textContent = el;
+        td.style.textAlign = "center";
+      } else {
+        const span = document.createElement("span");
+        const span1 = document.createElement("span");
+        span.textContent = `${index}:00 `;
+        td.prepend(span);
+        td.append(span1);
+      }
+
+      tr.append(td);
+    });
+
+    table.append(tr);
+  }
+
+  scheduleDescription.append(table);
+
+  const scheduleCell = document.getElementsByClassName("scheduleCell");
+  // console.log("scheduleCell", scheduleCell);
+
+  const newArr = Array.from(scheduleCell).map((el) => el.id);
+
+  // console.log("newArr", newArr);
+
+  // newArr.map(async el => {
+
+  //   const name = el;
+  //   const content = "";
+
+  //   await fetch("/api/schedule", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       name,
+  //       content,
+  //     }),
+  //   });
+
+  // });
+};
+
+// Запись задачи
 
 const taskRecording = async () => {
   const dataToSend = {
@@ -33,16 +167,24 @@ const taskRecording = async () => {
 
   const { name, customer, performer, due_date, completion_date } = dataToSend;
 
-  const response = await fetch("/api/tasks", {
+  await fetch("/api/tasks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, customer, performer, due_date, completion_date }),
+    body: JSON.stringify({
+      name,
+      customer,
+      performer,
+      due_date,
+      completion_date,
+    }),
   });
+
+  getAllTasks();
 };
 
 const taskTableCreate = async () => {
   const response = await fetch("/api/users"); // Pauses until fetch completes
-  const data = await response.json(); // Pauses until JSON parsing completes  
+  const data = await response.json(); // Pauses until JSON parsing completes
 
   const table = document.createElement("table");
   table.id = "taskTable";
@@ -99,15 +241,13 @@ const scheduleManagment = () => {
 
   scheduleTop.style.borderBottom = "1px solid var(--basicBG)";
 
-  console.log(scheduleTop.style.borderBottomColor);
+  // console.log(scheduleTop.style.borderBottomColor);
   scheduleDescription.style.display = "table-cell";
   scheduleDescription.style.borderTop = "none";
 
-
-  for (let index = 0; index < buttonOfTasks.length; index++) {    
+  for (let index = 0; index < buttonOfTasks.length; index++) {
     buttonOfTasks[index].style.display = "none";
   }
-
 };
 
 const tasksManagment = () => {
@@ -119,7 +259,7 @@ const tasksManagment = () => {
 
   tasksDescription.style.display = "table-cell";
 
-  for (let index = 0; index < buttonOfTasks.length; index++) {    
+  for (let index = 0; index < buttonOfTasks.length; index++) {
     buttonOfTasks[index].style.display = "inline-block";
   }
 };
@@ -166,13 +306,14 @@ autho.addEventListener("keyup", async (event) => {
 });
 
 const getAllTasks = async () => {
+  listAllTasks.innerHTML = "";
   const response = await fetch("/api/users"); // Pauses until fetch completes
   const data = await response.json(); // Pauses until JSON parsing completes
 
   const allTaskList = await fetch("/api/tasks"); // Pauses until fetch completes
   const dataTasks = await allTaskList.json();
-  
-  dataTasks.map(async el => {
+
+  dataTasks.map(async (el) => {
     const user = await fetch(`/api/users/${el.performer}`);
     const userData = await user.json();
     // console.log(userData);
@@ -180,6 +321,6 @@ const getAllTasks = async () => {
     li.textContent = `${el.name}. Ответственный: ${userData.name}. Срок выполнения: ${el.due_date}.`;
     listAllTasks.append(li);
   });
-}
+};
 
 getAllTasks();

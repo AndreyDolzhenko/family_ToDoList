@@ -3,6 +3,11 @@
 @import url(./reset.css);
 @import url(./variables.css);
 
+
+:root {
+    --tdWith: calc(100% / 7);
+}
+
 body {
     background: var(--basicBG);
     font-size: var(--basicFS);

@@ -10,6 +10,7 @@
 
 const currentYearCalender = (dayOfWeek, year) => {
   // Определяем количество дней в Феврале с учётом високосного года
+  // dayOfWeek - индекс дня недели в массиве week (например 2, если среда); year - нужный год в цифра, например 2025
   const leapYear = (currentYear) => {
     if (
       (currentYear % 4 == 0 && currentYear % 100 != 0) ||
