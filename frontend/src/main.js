@@ -17,11 +17,34 @@ let curentUserId = 0;
 scheduleTop.addEventListener("click", (event) => {
   scheduleManagment();
   createYearPlane();
+  getAllSchedule();
 });
 tasksTop.addEventListener("click", (event) => tasksManagment());
 
 addTask.addEventListener("click", (event) => taskTableCreate());
 recordTask.addEventListener("click", (event) => taskRecording());
+
+// Получение всех пунктов расписания
+
+const getAllSchedule = async () => {
+  try {
+    const result = await fetch("/api/schedule");
+    const data = await result.json();
+
+    data.forEach((el) => {
+      const searchCell = document.getElementById(el.name);
+      if (
+        searchCell &&
+        searchCell.lastChild &&
+        searchCell.lastChild.nodeType === 1
+      ) {
+        searchCell.lastChild.textContent = el.content;
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching schedule:", error);
+  }
+};
 
 // Получение расписания по name
 
@@ -29,21 +52,18 @@ const getScheduleByName = async (name) => {
   const result = await fetch(`/api/schedule/${name}`);
   const data = await result.json();
   const id = data.id;
-  console.log("data - ", id);
+  // console.log("data - ", id);
   // return id;
 };
 
 // Запись нового значения в расписании по name
 
 const updateScheduleByName = async (name, content) => {
-  
   await fetch(`/api/schedule/${name}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, content }),
   });
-
-  
 };
 
 // Формирование календаря на год
@@ -78,28 +98,43 @@ const createYearPlane = () => {
       td.id = el + index;
 
       td.addEventListener("contextmenu", (event) => {
-        console.log(event.target.lastChild.type);
+        // console.log(event.target.lastChild.type);
 
-        const name = event.target.id;
+        let name;
 
-        console.log("ID - ", getScheduleByName(event.target.id));
+        event.target.parentElement.tagName == "TR" ? name = event.target.id : name = event.target.parentElement.id;
 
-        if (event.target.lastChild.type != "text") {
+        // console.log("event.target.parentElement - ", event.target.parentElement);
+
+        if (event.target.parentElement.lastChild.type != "text" && event.target.lastChild.type != "text") {
           const input = document.createElement("input");
           input.type = "text";
-          input.value = event.target.id;
+          input.value = name;
 
-          input.addEventListener("keyup", (event) => {
-            if (event.key === "Enter") {
-              td.lastChild.textContent = input.value;
-              const content = input.value;
-              // console.log(td.lastChild.type);
-              updateScheduleByName(name, content);
-              input.remove();
+          input.addEventListener("keyup", (event) => {            
+            switch (event.key) {
+              case "Enter":                
+                const content = input.value;
+                document.getElementById(name).textContent = content;
+                // console.log("content", content);
+                // console.log("td.lastChild.type", td.lastChild.type);
+                updateScheduleByName(name, content);
+                input.remove();
+                break;
+
+              case "Escape":
+                input.remove();
+                break;
+
+              case "":
+                break;
+
+              default:
+                break;
             }
           });
 
-          td.prepend(input);
+          td.append(input);
         }
       });
 
@@ -109,7 +144,7 @@ const createYearPlane = () => {
       } else {
         const span = document.createElement("span");
         const span1 = document.createElement("span");
-        span.textContent = `${index}:00 `;
+        span.textContent = `${index}:`;
         td.prepend(span);
         td.append(span1);
       }
@@ -123,9 +158,12 @@ const createYearPlane = () => {
   scheduleDescription.append(table);
 
   const scheduleCell = document.getElementsByClassName("scheduleCell");
+
   // console.log("scheduleCell", scheduleCell);
 
-  const newArr = Array.from(scheduleCell).map((el) => el.id);
+  // !!! Код ниже используется ОДИН раз для формирования в базе данных пунктов расписания
+
+  // const newArr = Array.from(scheduleCell).map((el) => el.id);
 
   // console.log("newArr", newArr);
 
@@ -157,7 +195,7 @@ const taskRecording = async () => {
     completion_date: document.getElementById("completion_date").value,
   };
 
-  console.log(dataToSend);
+  // console.log(dataToSend);
 
   const { name, customer, performer, due_date, completion_date } = dataToSend;
 
@@ -267,12 +305,12 @@ const choiseOfPeriod = () => {
 
   // choiseOfYear = year;
 
-  const lastDayOfMonth = new Date(year, month + 1, 0);
-  let date = new Date(year, month, 1);
+  // const lastDayOfMonth = new Date(year, month + 1, 0);
+  // let date = new Date(year, month, 1);
 
-  for (let index = 0; index < 10; index++) {
-    console.log(date.setDate(date.getDate() + index), month, year);
-  }
+  // for (let index = 0; index < 10; index++) {
+  //   console.log(date.setDate(date.getDate() + index), month, year);
+  // }
 };
 
 autho.addEventListener("keyup", async (event) => {
