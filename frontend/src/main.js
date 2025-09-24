@@ -8,7 +8,7 @@ const scheduleTop = document.getElementById("scheduleTop");
 const scheduleDescription = document.getElementById("scheduleDescription");
 const tasksDescription = document.getElementById("tasksDescription");
 const addTask = document.getElementById("addTask");
-const recordTask = document.getElementById("recordTask");
+const executeTask = document.getElementById("executeTask");
 const listAllTasks = document.getElementById("listAllTasks");
 const buttonOfTasks = document.getElementsByClassName("buttonOfTasks");
 
@@ -22,7 +22,7 @@ scheduleTop.addEventListener("click", (event) => {
 tasksTop.addEventListener("click", (event) => tasksManagment());
 
 addTask.addEventListener("click", (event) => taskTableCreate());
-recordTask.addEventListener("click", (event) => taskRecording());
+// executeTask.addEventListener("click", (event) => taskRecording());
 
 // Получение всех пунктов расписания
 
@@ -102,18 +102,23 @@ const createYearPlane = () => {
 
         let name;
 
-        event.target.parentElement.tagName == "TR" ? name = event.target.id : name = event.target.parentElement.id;
+        event.target.parentElement.tagName == "TR"
+          ? (name = event.target.id)
+          : (name = event.target.parentElement.id);
 
         // console.log("event.target.parentElement - ", event.target.parentElement);
 
-        if (event.target.parentElement.lastChild.type != "text" && event.target.lastChild.type != "text") {
+        if (
+          event.target.parentElement.lastChild.type != "text" &&
+          event.target.lastChild.type != "text"
+        ) {
           const input = document.createElement("input");
           input.type = "text";
           input.value = name;
 
-          input.addEventListener("keyup", (event) => {            
+          input.addEventListener("keyup", (event) => {
             switch (event.key) {
-              case "Enter":                
+              case "Enter":
                 const content = input.value;
                 document.getElementById(name).textContent = content;
                 // console.log("content", content);
@@ -186,16 +191,20 @@ const createYearPlane = () => {
 
 // Запись задачи
 
+const taskUpdate = () => {
+  return choiseOfPeriod();
+};
+
 const taskRecording = async () => {
   const dataToSend = {
     name: document.getElementById("name").value,
     customer: curentUserId,
     performer: Number(document.getElementById("performer").value),
     due_date: document.getElementById("due_date").value,
-    completion_date: document.getElementById("completion_date").value,
+    // completion_date: "0000-00-00",
   };
 
-  // console.log(dataToSend);
+  console.log(dataToSend);
 
   const { name, customer, performer, due_date, completion_date } = dataToSend;
 
@@ -207,7 +216,7 @@ const taskRecording = async () => {
       customer,
       performer,
       due_date,
-      completion_date,
+      // completion_date,
     }),
   });
 
@@ -222,6 +231,22 @@ const taskTableCreate = async () => {
   table.id = "taskTable";
   table.style = "margin: 5px 20px;";
   const tr = document.createElement("tr");
+  tr.addEventListener("keyup", (event) => {
+    switch (event.key) {
+      case "Escape":
+        tr.remove();
+        break;
+
+      case "Enter":
+        taskRecording();
+        tr.remove();
+        break;
+
+      default:
+        break;
+    }
+  });
+
   for (let index = 0; index <= 3; index++) {
     const td = document.createElement("td");
     td.style = "border: 0px; margin: 2px 0;";
@@ -259,6 +284,7 @@ const taskTableCreate = async () => {
     }
 
     index != 1 ? td.append(input) : td.append(select);
+
     tr.append(td);
   }
 
@@ -302,6 +328,8 @@ const choiseOfPeriod = () => {
   const day = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
+
+  return `${day}.${month}.${year}.`;
 
   // choiseOfYear = year;
 
@@ -350,7 +378,27 @@ const getAllTasks = async () => {
     const userData = await user.json();
     // console.log(userData);
     const li = document.createElement("li");
-    li.textContent = `${el.name}. Ответственный: ${userData.name}. Срок выполнения: ${el.due_date}.`;
+    li.id = "task" + el.id;
+    li.addEventListener("contextmenu", (event) => {
+      //   const response = await fetch(`/api/tasks/${el.id}`, {
+      // method: "PUT",
+      // headers: { "Content-Type": "application/json" },
+      // body: JSON.stringify({ name, content }),
+      //   });
+
+      if (li.lastChild.tagName != "SPAN") {
+        const span = document.createElement("span");
+        span.textContent += ` Дата завершения задачи: ${taskUpdate()}`;
+        li.append(span);
+        li.style = "text-decoration: line-through; color: darkkhaki;";
+      } else {
+        li.lastChild.remove();
+        li.style = "text-decoration: none; color: var(--basicColor);";
+      }
+    });
+    li.textContent = `${el.name}. Ответственный: ${
+      userData.name
+    }. Срок выполнения: ${el.due_date.slice(0, 10)}.`;
     listAllTasks.append(li);
   });
 };
