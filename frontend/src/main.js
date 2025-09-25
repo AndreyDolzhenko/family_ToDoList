@@ -1,3 +1,5 @@
+// const { DELETE } = require("sequelize/lib/query-types");
+
 const choiceOfWorkplace = document.getElementsByClassName("choiceOfWorkplace");
 const workPlace = document.getElementsByClassName("workPlace");
 const allTd = document.querySelectorAll("td");
@@ -216,7 +218,7 @@ const taskRecording = async () => {
       customer,
       performer,
       due_date,
-      // completion_date,
+      completion_date,
     }),
   });
 
@@ -329,7 +331,7 @@ const choiseOfPeriod = () => {
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
 
-  return `${day}.${month}.${year}.`;
+  return `${year}-${month}-${day}`;
 
   // choiseOfYear = year;
 
@@ -379,12 +381,53 @@ const getAllTasks = async () => {
     // console.log(userData);
     const li = document.createElement("li");
     li.id = "task" + el.id;
-    li.addEventListener("contextmenu", (event) => {
-      //   const response = await fetch(`/api/tasks/${el.id}`, {
-      // method: "PUT",
-      // headers: { "Content-Type": "application/json" },
-      // body: JSON.stringify({ name, content }),
-      //   });
+    li.addEventListener("contextmenu", async (event) => {
+      const name = el.name;
+      const customer = el.customer;
+      const performer = el.performer;
+      const due_date = el.due_date;
+      let completion_date = "";
+      if (el.completion_date != "null") {
+        // console.log(el.completion_date);        
+        el.completion_date == "2000-01-01T00:00:00.000Z"
+          ? completion_date = taskUpdate()
+          : completion_date = "2000-01-01T00:00:00.000Z";        
+      } else {
+        console.log("!!!CHEK!!!")
+        completion_date = "2000-01-01T00:00:00.000Z";
+      }
+
+      await fetch(`/api/tasks/${el.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          customer,
+          performer,
+          due_date,
+          completion_date,
+        }),
+      });
+
+      // Deleting task
+      const deleteKey = event.target;
+      document.addEventListener("keyup", async (event) => {
+        // console.log(event.key);
+        if (event.key == "Delete") {
+          const trueDelete = confirm(`Are you sure DELETE? ${deleteKey.innerText}`);
+          if (trueDelete == true) {
+
+            await fetch (`/api/tasks/${el.id}`, {method: "DELETE"});
+
+            deleteKey.remove();
+            
+          }
+        }        
+        return;
+      });
+
+
+      // console.log("el.id", el.id);
 
       if (li.lastChild.tagName != "SPAN") {
         const span = document.createElement("span");
@@ -399,6 +442,17 @@ const getAllTasks = async () => {
     li.textContent = `${el.name}. Ответственный: ${
       userData.name
     }. Срок выполнения: ${el.due_date.slice(0, 10)}.`;
+
+    if (el.completion_date) {
+      if (el.completion_date.slice(0, 10) != "2000-01-01") {
+        const span = document.createElement("span");
+        span.textContent += ` Дата завершения задачи: ${el.completion_date.slice(0, 10)}`;
+        li.append(span);
+        li.style = "text-decoration: line-through; color: darkkhaki;";
+      }      
+    }
+
+
     listAllTasks.append(li);
   });
 };
