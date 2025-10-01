@@ -118,6 +118,35 @@ const createYearPlane = () => {
           input.type = "text";
           input.value = name;
 
+          document.addEventListener("touchmove", (event) => {
+            input.remove();
+            //  console.log(taskTable.firstChild);
+          });
+
+          let lastTouchEnd = 0;
+          document.addEventListener(
+            "touchend",
+            function (event) {
+              var now = new Date().getTime();
+              if (now - lastTouchEnd <= 300) {
+                // 300ms - типичный интервал для двойного касания
+                // Здесь выполняется действие для двойного касания
+                // console.log('Двойное касание!');
+
+                const content = input.value;
+                document.getElementById(name).textContent = content;
+                // console.log("content", content);
+                // console.log("td.lastChild.type", td.lastChild.type);
+                updateScheduleByName(name, content);
+                input.remove();
+
+                event.preventDefault(); // Отменяет стандартное действие браузера (например, прокрутку)
+              }
+              lastTouchEnd = now;
+            },
+            false
+          );
+
           input.addEventListener("keyup", (event) => {
             switch (event.key) {
               case "Enter":
@@ -224,6 +253,36 @@ const taskRecording = async () => {
 
   getAllTasks();
 };
+
+const newTask = document;
+
+document.addEventListener("touchmove", (event) => {
+  const taskTable = document.getElementById("taskTable");
+  taskTable.firstChild.remove();
+  //  console.log(taskTable.firstChild);
+});
+
+//touch delete new case
+let lastTouchEnd = 0;
+document.addEventListener(
+  "touchend",
+  function (event) {
+    var now = new Date().getTime();
+    if (now - lastTouchEnd <= 300) {
+      // 300ms - типичный интервал для двойного касания
+      // Здесь выполняется действие для двойного касания
+      // console.log('Двойное касание!');
+
+      taskRecording();
+      const taskTable = document.getElementById("taskTable");
+      taskTable.firstChild.remove();
+
+      event.preventDefault(); // Отменяет стандартное действие браузера (например, прокрутку)
+    }
+    lastTouchEnd = now;
+  },
+  false
+);
 
 const taskTableCreate = async () => {
   const response = await fetch("/api/users"); // Pauses until fetch completes
@@ -388,12 +447,12 @@ const getAllTasks = async () => {
       const due_date = el.due_date;
       let completion_date = "";
       if (el.completion_date != "null") {
-        // console.log(el.completion_date);        
+        // console.log(el.completion_date);
         el.completion_date == "2000-01-01T00:00:00.000Z"
-          ? completion_date = taskUpdate()
-          : completion_date = "2000-01-01T00:00:00.000Z";        
+          ? (completion_date = taskUpdate())
+          : (completion_date = "2000-01-01T00:00:00.000Z");
       } else {
-        console.log("!!!CHEK!!!")
+        console.log("!!!CHEK!!!");
         completion_date = "2000-01-01T00:00:00.000Z";
       }
 
@@ -414,20 +473,17 @@ const getAllTasks = async () => {
       document.addEventListener("keyup", async (event) => {
         // console.log(event.key);
         if (event.key == "Delete") {
-          const trueDelete = confirm(`Are you sure DELETE? ${deleteKey.innerText}`);
+          const trueDelete = confirm(
+            `Are you sure DELETE? ${deleteKey.innerText}`
+          );
           if (trueDelete == true) {
-
-            await fetch (`/api/tasks/${el.id}`, {method: "DELETE"});
+            await fetch(`/api/tasks/${el.id}`, { method: "DELETE" });
 
             deleteKey.remove();
-            
           }
-        }        
+        }
         return;
       });
-
-
-      // console.log("el.id", el.id);
 
       if (li.lastChild.tagName != "SPAN") {
         const span = document.createElement("span");
@@ -439,6 +495,35 @@ const getAllTasks = async () => {
         li.style = "text-decoration: none; color: var(--basicColor);";
       }
     });
+
+    // touch event
+
+    li.addEventListener("touchend", async (event) => {
+      // Deleting task
+      const deleteKey = event.target;
+
+      var now = new Date().getTime();
+      console.log(event.target);
+      if (now - lastTouchEnd <= 300) {
+        // 300ms - типичный интервал для двойного касания
+        // Здесь выполняется действие для двойного касания
+        // console.log('Двойное касание!');
+        console.log(event.target);
+
+        const trueDelete = confirm(
+          `Are you sure DELETE? ${deleteKey.innerText}`
+        );
+        if (trueDelete == true) {
+          await fetch(`/api/tasks/${el.id}`, { method: "DELETE" });
+
+          deleteKey.remove();
+        }
+
+        event.preventDefault(); // Отменяет стандартное действие браузера (например, прокрутку)
+      }
+      lastTouchEnd = now;
+    });
+
     li.textContent = `${el.name}. Ответственный: ${
       userData.name
     }. Срок выполнения: ${el.due_date.slice(0, 10)}.`;
@@ -446,12 +531,14 @@ const getAllTasks = async () => {
     if (el.completion_date) {
       if (el.completion_date.slice(0, 10) != "2000-01-01") {
         const span = document.createElement("span");
-        span.textContent += ` Дата завершения задачи: ${el.completion_date.slice(0, 10)}`;
+        span.textContent += ` Дата завершения задачи: ${el.completion_date.slice(
+          0,
+          10
+        )}`;
         li.append(span);
         li.style = "text-decoration: line-through; color: darkkhaki;";
-      }      
+      }
     }
-
 
     listAllTasks.append(li);
   });
