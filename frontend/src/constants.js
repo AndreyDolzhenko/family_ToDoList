@@ -24,13 +24,13 @@ const currentYearCalender = (dayOfWeek, year) => {
 
   // массив с днями недели
   const week = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+    "Sun",
   ];
 
   // массив с именами месяцев и количеством дней в каждом. Високосный год определяется функцией
@@ -101,7 +101,7 @@ const currentYearCalender = (dayOfWeek, year) => {
 
   // console.log(currentCalendar);
 
-  return currentCalendar;
+  return [currentCalendar, calendar];
 };
 
 

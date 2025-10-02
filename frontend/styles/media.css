@@ -1,5 +1,9 @@
 @media screen and (max-width: 540px) {
-  .leftMenu {
-    width: 60%;
+  table {
+    width: inherit;
+  }
+
+  span {
+    font-size: 0.9em;
   }
 }

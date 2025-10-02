@@ -13,6 +13,7 @@ const addTask = document.getElementById("addTask");
 const executeTask = document.getElementById("executeTask");
 const listAllTasks = document.getElementById("listAllTasks");
 const buttonOfTasks = document.getElementsByClassName("buttonOfTasks");
+const footer = document.querySelector("footer");
 
 let curentUserId = 0;
 
@@ -72,8 +73,85 @@ const updateScheduleByName = async (name, content) => {
 
 const createYearPlane = () => {
   scheduleDescription.textContent = "";
-  // const currentYearCalenderTable = currentYearCalender(2, 2025);
-  // console.log(currentYearCalenderTable);
+  const currentYearCalenderTable = currentYearCalender(2, 2025);
+  // console.log(currentYearCalenderTable[0]);
+  let div = document.createElement("div");
+
+  const calendar = document.getElementById("calendar");
+
+  let scoreMonth = [0];
+    let level = 0;
+    currentYearCalenderTable[1].forEach((el) => {
+      level += el.days;
+      scoreMonth.push(level);
+    });
+
+  currentYearCalenderTable[0].map((el, index) => {
+    // console.log(el);
+
+    if (scoreMonth.includes(index) == true) {
+      const br = document.createElement("br");
+      calendar.append(br);
+      const br1 = document.createElement("br");
+      const span = document.createElement("span");
+      span.textContent = ` ${el[2]}  `;
+      span.style = "color: darkcyan; text-transform: uppercase;";
+      calendar.append(span);
+      calendar.append(br1);
+      console.log(index);
+    }
+
+    
+
+    const span = document.createElement("span");
+    span.textContent = ` | ${el[1]} ${el[0]} | `;
+    if (el[0] == "Sat" || el[0] == "Sun") {
+      span.style.color = "brown";
+      calendar.append(span);
+    }
+
+    if (el[0] == "Mon") {     
+      calendar.append(span);
+      const br = document.createElement("br");
+      calendar.append(br);
+    }
+
+    calendar.append(span);
+
+    // if (scoreDay < currentYearCalenderTable[1][scoreMonth].days) {
+    //   const span = document.createElement("span");
+    //   span.textContent = ` | ${el[2]} ${el[1]} ${el[0]} | `;
+    //   if (el[0] == "Saturday" || el[0] == "Sunday") {
+    //     span.style.color = "brown";
+    //   }
+
+    //   div.append(span);
+
+    //   scoreDay++;
+    // }
+    // if (scoreDay == currentYearCalenderTable[1][scoreMonth].days) {
+    //   const div1 = document.createElement("div");
+    //   const span = document.createElement("span");
+    //   const span1 = document.createElement("span");
+    //   span.textContent = ` | ${el[2]} ${el[1]} ${el[0]} | `;
+
+    //   if (el[0] == "Saturday" || el[0] == "Sunday") {
+    //     span.style.color = "brown";
+    //   }
+
+    //   div.append(span);
+
+    //   span1.textContent = `${el[2]}`;
+    //   span1.style.color = "blue";
+    //   div.prepend(span);
+    //   calendar.append(div);
+
+    //   // div.innerHTML = "";
+
+    //   scoreDay = 1;
+    //   scoreMonth < 11 ? scoreMonth++ : false;
+    // }
+  });
 
   const week = [
     "Monday",

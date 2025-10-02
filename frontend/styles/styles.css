@@ -37,6 +37,10 @@ li {
     margin-left: 30px;
 }
 
+span {
+    font-size: 0.8em;
+}
+
 input, select {
     border-radius: 5px;
     background: aliceblue;
@@ -75,7 +79,7 @@ header>form {
 }
 
 table {
-    width: 100%;
+    /* width: 100%; */
     margin: 0 2em;
 }
 
@@ -144,4 +148,12 @@ table {
 
 .buttonOfTasks {
     display: none;
+}
+
+#calendar {
+    width: 90%;
+    text-align: end;
+    height: 300px;
+    overflow: auto;
+    line-height: 1.3;
 }
