@@ -26,14 +26,30 @@ exports.getAllSchedule = async (req, res) => {
 };
 
 // READ: Получение одного schedule по ID
-exports.getScheduleById = async (req, res) => {
+// exports.getScheduleById = async (req, res) => {
+// 	try {
+// 		const schedule = await Schedule.findOne({ where: { name: req.params.name } });
+// 		console.log("req.params.name - ", req.params.name);
+// 		console.log("schedule - ", schedule);
+// 		if (!schedule) {
+// 			return res.status(404).json({ message: 'Schedule не найден' });
+// 		}
+// 		res.status(200).json(schedule);
+// 	} 
+// 	catch (error) {
+// 		res.status(500).json({ message: 'Ошибка при получении schedule', error: error.message });
+// 	}
+// };
+
+exports.getScheduleByUserId = async (req, res) => {
 	try {
-		const schedule = await Schedule.findOne({ where: { name: req.params.name } });
-		console.log("req.params.name - ", req.params.name);
-		console.log("schedule - ", schedule);
+		const schedule = await Schedule.findAll({ where: { user_id: req.params.user_id } });
+		console.log("req.params.user_id - ", req.params.user_id);
+		
 		if (!schedule) {
 			return res.status(404).json({ message: 'Schedule не найден' });
 		}
+		console.log("res - ", res);
 		res.status(200).json(schedule);
 	} 
 	catch (error) {

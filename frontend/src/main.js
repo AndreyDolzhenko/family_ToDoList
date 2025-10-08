@@ -4,6 +4,7 @@ const choiceOfWorkplace = document.getElementsByClassName("choiceOfWorkplace");
 const workPlace = document.getElementsByClassName("workPlace");
 const allTd = document.querySelectorAll("td");
 const autho = document.getElementById("autho");
+const authoClick = document.getElementById("authoClick");
 const wellcome = document.getElementById("wellcome");
 const tasksTop = document.getElementById("tasksTop");
 const scheduleTop = document.getElementById("scheduleTop");
@@ -31,7 +32,15 @@ addTask.addEventListener("click", (event) => taskTableCreate());
 
 const getAllSchedule = async () => {
   try {
-    const result = await fetch("/api/schedule");
+    let user_name;
+    autho.children[autho.children.length - 1].value != ""
+      ? (user_name = autho.children[autho.children.length - 1].value)
+      : (user_name = "user_name");
+    const user_result = await fetch(`/api/users/${user_name}`);
+    const user_data = await user_result.json();
+    const user_id = user_data.id;
+
+    const result = await fetch(`/api/schedule/${user_id}`);
     const data = await result.json();
 
     data.forEach((el) => {
@@ -54,104 +63,91 @@ const getAllSchedule = async () => {
 const getScheduleByName = async (name) => {
   const result = await fetch(`/api/schedule/${name}`);
   const data = await result.json();
-  const id = data.id;
-  // console.log("data - ", id);
-  // return id;
+  const id = data.id;  
 };
 
 // Запись нового значения в расписании по name
 
-const updateScheduleByName = async (name, content) => {
-  await fetch(`/api/schedule/${name}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, content }),
-  });
+const updateScheduleByName = async (name, content, user_name) => {
+  const all_schedules = await fetch("/api/schedule");
+  const all_schedules_result = await all_schedules.json();  
+
+  const includesResult = all_schedules_result.map((obj) => obj.name);  
+
+  const result = await fetch(`/api/users/${user_name}`);
+  const data = await result.json();
+  const user_id = data.id; 
+
+  switch (includesResult.includes(name)) {
+    case true:
+      await fetch(`/api/schedule/${name}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, user_id, content }),
+      });
+
+      break;
+
+    case false:
+      await fetch(`/api/schedule/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, user_id, content }),
+      });
+
+      break;
+
+    default:
+      break;
+  }
 };
 
 // Формирование календаря на год
 
 const createYearPlane = () => {
   scheduleDescription.textContent = "";
-  const currentYearCalenderTable = currentYearCalender(2, 2025);
-  // console.log(currentYearCalenderTable[0]);
+  const currentYearCalenderTable = currentYearCalender(2, 2025);  
   let div = document.createElement("div");
 
   const calendar = document.getElementById("calendar");
 
   let scoreMonth = [0];
-    let level = 0;
-    currentYearCalenderTable[1].forEach((el) => {
-      level += el.days;
-      scoreMonth.push(level);
-    });
-
-  currentYearCalenderTable[0].map((el, index) => {
-    // console.log(el);
-
-    if (scoreMonth.includes(index) == true) {
-      const br = document.createElement("br");
-      calendar.append(br);
-      const br1 = document.createElement("br");
-      const span = document.createElement("span");
-      span.textContent = ` ${el[2]}  `;
-      span.style = "color: darkcyan; text-transform: uppercase;";
-      calendar.append(span);
-      calendar.append(br1);
-      console.log(index);
-    }
-
-    
-
-    const span = document.createElement("span");
-    span.textContent = ` | ${el[1]} ${el[0]} | `;
-    if (el[0] == "Sat" || el[0] == "Sun") {
-      span.style.color = "brown";
-      calendar.append(span);
-    }
-
-    if (el[0] == "Mon") {     
-      calendar.append(span);
-      const br = document.createElement("br");
-      calendar.append(br);
-    }
-
-    calendar.append(span);
-
-    // if (scoreDay < currentYearCalenderTable[1][scoreMonth].days) {
-    //   const span = document.createElement("span");
-    //   span.textContent = ` | ${el[2]} ${el[1]} ${el[0]} | `;
-    //   if (el[0] == "Saturday" || el[0] == "Sunday") {
-    //     span.style.color = "brown";
-    //   }
-
-    //   div.append(span);
-
-    //   scoreDay++;
-    // }
-    // if (scoreDay == currentYearCalenderTable[1][scoreMonth].days) {
-    //   const div1 = document.createElement("div");
-    //   const span = document.createElement("span");
-    //   const span1 = document.createElement("span");
-    //   span.textContent = ` | ${el[2]} ${el[1]} ${el[0]} | `;
-
-    //   if (el[0] == "Saturday" || el[0] == "Sunday") {
-    //     span.style.color = "brown";
-    //   }
-
-    //   div.append(span);
-
-    //   span1.textContent = `${el[2]}`;
-    //   span1.style.color = "blue";
-    //   div.prepend(span);
-    //   calendar.append(div);
-
-    //   // div.innerHTML = "";
-
-    //   scoreDay = 1;
-    //   scoreMonth < 11 ? scoreMonth++ : false;
-    // }
+  let level = 0;
+  currentYearCalenderTable[1].forEach((el) => {
+    level += el.days;
+    scoreMonth.push(level);
   });
+
+  if (calendar.textContent == "") {
+    currentYearCalenderTable[0].map((el, index) => {
+      if (scoreMonth.includes(index) == true) {
+        const br = document.createElement("br");
+        calendar.append(br);
+        const br1 = document.createElement("br");
+        const span = document.createElement("span");
+        span.textContent = ` ${el[2]}  `;
+        span.style = "color: darkcyan; text-transform: uppercase;";
+        calendar.append(span);
+        calendar.append(br1);
+      }
+  
+      const span = document.createElement("span");
+      span.textContent = ` | ${el[1]} ${el[0]} | `;
+      if (el[0] == "Sat" || el[0] == "Sun") {
+        span.style.color = "brown";
+        calendar.append(span);
+      }
+  
+      if (el[0] == "Mon") {
+        calendar.append(span);
+        const br = document.createElement("br");
+        calendar.append(br);
+      }
+  
+      calendar.append(span);
+    });    
+  }
+
 
   const week = [
     "Monday",
@@ -178,15 +174,11 @@ const createYearPlane = () => {
       td.id = el + index;
 
       td.addEventListener("contextmenu", (event) => {
-        // console.log(event.target.lastChild.type);
-
         let name;
 
         event.target.parentElement.tagName == "TR"
           ? (name = event.target.id)
           : (name = event.target.parentElement.id);
-
-        // console.log("event.target.parentElement - ", event.target.parentElement);
 
         if (
           event.target.parentElement.lastChild.type != "text" &&
@@ -198,7 +190,6 @@ const createYearPlane = () => {
 
           document.addEventListener("touchmove", (event) => {
             input.remove();
-            //  console.log(taskTable.firstChild);
           });
 
           let lastTouchEnd = 0;
@@ -209,13 +200,18 @@ const createYearPlane = () => {
               if (now - lastTouchEnd <= 300) {
                 // 300ms - типичный интервал для двойного касания
                 // Здесь выполняется действие для двойного касания
-                // console.log('Двойное касание!');
+
+                // const autho = document.getElementById("autho");
+
+                let user_name;
+                autho.children[autho.children.length - 1].value != ""
+                  ? (user_name =
+                      autho.children[autho.children.length - 1].value)
+                  : (user_name = "user_name");
 
                 const content = input.value;
                 document.getElementById(name).textContent = content;
-                // console.log("content", content);
-                // console.log("td.lastChild.type", td.lastChild.type);
-                updateScheduleByName(name, content);
+                updateScheduleByName(name, content, user_name);
                 input.remove();
 
                 event.preventDefault(); // Отменяет стандартное действие браузера (например, прокрутку)
@@ -229,10 +225,13 @@ const createYearPlane = () => {
             switch (event.key) {
               case "Enter":
                 const content = input.value;
+                let user_name;
+                autho.children[autho.children.length - 1].value != ""
+                  ? (user_name =
+                      autho.children[autho.children.length - 1].value)
+                  : (user_name = "user_name");
                 document.getElementById(name).textContent = content;
-                // console.log("content", content);
-                // console.log("td.lastChild.type", td.lastChild.type);
-                updateScheduleByName(name, content);
+                updateScheduleByName(name, content, user_name);
                 input.remove();
                 break;
 
@@ -273,13 +272,9 @@ const createYearPlane = () => {
 
   const scheduleCell = document.getElementsByClassName("scheduleCell");
 
-  // console.log("scheduleCell", scheduleCell);
-
   // !!! Код ниже используется ОДИН раз для формирования в базе данных пунктов расписания
 
   // const newArr = Array.from(scheduleCell).map((el) => el.id);
-
-  // console.log("newArr", newArr);
 
   // newArr.map(async el => {
 
@@ -313,8 +308,6 @@ const taskRecording = async () => {
     // completion_date: "0000-00-00",
   };
 
-  console.log(dataToSend);
-
   const { name, customer, performer, due_date, completion_date } = dataToSend;
 
   await fetch("/api/tasks", {
@@ -337,7 +330,6 @@ const newTask = document;
 document.addEventListener("touchmove", (event) => {
   const taskTable = document.getElementById("taskTable");
   taskTable.firstChild.remove();
-  //  console.log(taskTable.firstChild);
 });
 
 //touch delete new case
@@ -349,7 +341,6 @@ document.addEventListener(
     if (now - lastTouchEnd <= 300) {
       // 300ms - типичный интервал для двойного касания
       // Здесь выполняется действие для двойного касания
-      // console.log('Двойное касание!');
 
       taskRecording();
       const taskTable = document.getElementById("taskTable");
@@ -438,7 +429,6 @@ const scheduleManagment = () => {
 
   scheduleTop.style.borderBottom = "1px solid var(--basicBG)";
 
-  // console.log(scheduleTop.style.borderBottomColor);
   scheduleDescription.style.display = "table-cell";
   scheduleDescription.style.borderTop = "none";
 
@@ -461,8 +451,6 @@ const tasksManagment = () => {
   }
 };
 
-// console.log(currentYearCalender(2, 2025));
-
 const choiseOfPeriod = () => {
   const day = new Date().getDate();
   const month = new Date().getMonth() + 1;
@@ -474,33 +462,30 @@ const choiseOfPeriod = () => {
 
   // const lastDayOfMonth = new Date(year, month + 1, 0);
   // let date = new Date(year, month, 1);
-
-  // for (let index = 0; index < 10; index++) {
-  //   console.log(date.setDate(date.getDate() + index), month, year);
-  // }
 };
 
-autho.addEventListener("keyup", async (event) => {
-  // event.key == "Enter" ? console.log(event.target.value) : false;
-  if (event.key == "Enter") {
-    const response = await fetch("/api/users");
-    const data = await response.json();
-    let nameTop = "Нет такого пользователя. Зарегистрируйтесь!";
-    let found = false;
+authoClick.addEventListener("click", async (event) => {
+  const response = await fetch("/api/users");
+  const data = await response.json();
+  let nameTop = "Нет такого пользователя. Зарегистрируйтесь!";
+  let found = false;
 
-    data.forEach((el) => {
-      if (event.target.value === el.name) {
-        curentUserId = el.id;
-        nameTop = el.name;
-        wellcome.innerHTML = `Добро пожаловать, ${nameTop}!`;
-        // console.log(name);
-        found = true;
-      }
-    });
+  let user_name;
+  autho.children[autho.children.length - 1].value != ""
+    ? (user_name = autho.children[autho.children.length - 1].value)
+    : (user_name = "user_name");
 
-    if (!found) {
-      wellcome.textContent = nameTop;
+  data.forEach((el) => {
+    if (user_name === el.name) {
+      curentUserId = el.id;
+      nameTop = el.name;
+      wellcome.innerHTML = `Добро пожаловать, ${nameTop}!`;      
+      found = true;
     }
+  });
+
+  if (!found) {
+    wellcome.textContent = nameTop;
   }
 });
 
@@ -514,8 +499,7 @@ const getAllTasks = async () => {
 
   dataTasks.map(async (el) => {
     const user = await fetch(`/api/users/${el.performer}`);
-    const userData = await user.json();
-    // console.log(userData);
+    const userData = await user.json();    
     const li = document.createElement("li");
     li.id = "task" + el.id;
     li.addEventListener("contextmenu", async (event) => {
@@ -525,12 +509,10 @@ const getAllTasks = async () => {
       const due_date = el.due_date;
       let completion_date = "";
       if (el.completion_date != "null") {
-        // console.log(el.completion_date);
         el.completion_date == "2000-01-01T00:00:00.000Z"
           ? (completion_date = taskUpdate())
           : (completion_date = "2000-01-01T00:00:00.000Z");
       } else {
-        console.log("!!!CHEK!!!");
         completion_date = "2000-01-01T00:00:00.000Z";
       }
 
@@ -549,7 +531,6 @@ const getAllTasks = async () => {
       // Deleting task
       const deleteKey = event.target;
       document.addEventListener("keyup", async (event) => {
-        // console.log(event.key);
         if (event.key == "Delete") {
           const trueDelete = confirm(
             `Are you sure DELETE? ${deleteKey.innerText}`
@@ -581,12 +562,10 @@ const getAllTasks = async () => {
       const deleteKey = event.target;
 
       var now = new Date().getTime();
-      console.log(event.target);
+
       if (now - lastTouchEnd <= 300) {
         // 300ms - типичный интервал для двойного касания
         // Здесь выполняется действие для двойного касания
-        // console.log('Двойное касание!');
-        console.log(event.target);
 
         const trueDelete = confirm(
           `Are you sure DELETE? ${deleteKey.innerText}`

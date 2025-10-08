@@ -18,7 +18,7 @@ module.exports = {
         references: { model: "Institutes", key: "id" },
         onDelete: "CASCADE",
       },
-    });
+    }, { cascade: true });
   },
 
   async down (queryInterface, Sequelize) {
