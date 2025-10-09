@@ -72,6 +72,9 @@ app.get("/", (req, res) => {
   res.send("API для управления задачами работает!");
 });
 
+const backupRoutes = require("./routes/backup.routes");
+app.use("/api/backup", backupRoutes);
+
 const userRoutes = require("./routes/user.routes");
 app.use("/api/users", userRoutes);
 

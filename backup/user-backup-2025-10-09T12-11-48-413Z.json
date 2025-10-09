@@ -1,0 +1,34 @@
+{
+  "timestamp": "2025-10-09T12:11:48.413Z",
+  "count": 4,
+  "data": [
+    {
+      "id": 1,
+      "name": "Andrey",
+      "team": "family",
+      "createdAt": "2025-10-06T13:33:20.079Z",
+      "updatedAt": "2025-10-06T13:33:20.079Z"
+    },
+    {
+      "id": 2,
+      "name": "Demid",
+      "team": "family",
+      "createdAt": "2025-10-06T13:33:51.429Z",
+      "updatedAt": "2025-10-06T13:33:51.429Z"
+    },
+    {
+      "id": 3,
+      "name": "Bogdan",
+      "team": "family",
+      "createdAt": "2025-10-06T13:33:59.149Z",
+      "updatedAt": "2025-10-06T13:33:59.149Z"
+    },
+    {
+      "id": 4,
+      "name": "user_name",
+      "team": "other",
+      "createdAt": "2025-10-07T12:14:16.494Z",
+      "updatedAt": "2025-10-07T12:14:16.494Z"
+    }
+  ]
+}
