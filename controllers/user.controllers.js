@@ -65,6 +65,7 @@ exports.getUserByName = async (req, res) => {
 // UPDATE: Обновление user по ID
 exports.updateUser = async (req, res) => {
   try {
+    console.log(req.body);
     const [updated] = await User.update(req.body, {
       where: { id: req.params.id },
     });

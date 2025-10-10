@@ -14,6 +14,11 @@ module.exports = {
         unique: true,
         type: Sequelize.STRING
       },
+      password: {
+        allowNull: true,
+        unique: false,
+        type: Sequelize.STRING
+      },
       team: {
         type: Sequelize.STRING
       },
@@ -28,6 +33,9 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('UserSubjects');
+    await queryInterface.dropTable('UserInstitutes');
+    // Затем удаляем основную таблицу
     await queryInterface.dropTable('Users');
   }
 };

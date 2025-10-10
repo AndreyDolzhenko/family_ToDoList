@@ -1,4 +1,3 @@
-// const { DELETE } = require("sequelize/lib/query-types");
 
 const choiceOfWorkplace = document.getElementsByClassName("choiceOfWorkplace");
 const workPlace = document.getElementsByClassName("workPlace");
@@ -15,13 +14,29 @@ const executeTask = document.getElementById("executeTask");
 const listAllTasks = document.getElementById("listAllTasks");
 const buttonOfTasks = document.getElementsByClassName("buttonOfTasks");
 const footer = document.querySelector("footer");
+const enterName = document.getElementById("enterName");
+const enterPass = document.getElementById("enterPass");
 
 let curentUserId = 0;
 
-scheduleTop.addEventListener("click", (event) => {
-  scheduleManagment();
-  createYearPlane();
-  getAllSchedule();
+scheduleTop.addEventListener("click", async (event) => {
+  const user_name = enterName.value;
+  const pass = enterPass.value;
+
+  const user_result = await fetch(`/api/users/${user_name}`);
+  const user_data = await user_result.json();
+
+  
+  if (pass == user_data.password && user_name == user_data.name) {
+    scheduleManagment();
+    createYearPlane();
+    getAllSchedule();
+    
+    // console.log("password", user_data.name, user_data.password);
+  } else {
+    alert("Неверный логин или пароль!");
+  }
+
 });
 tasksTop.addEventListener("click", (event) => tasksManagment());
 
@@ -33,8 +48,8 @@ addTask.addEventListener("click", (event) => taskTableCreate());
 const getAllSchedule = async () => {
   try {
     let user_name;
-    autho.children[autho.children.length - 1].value != ""
-      ? (user_name = autho.children[autho.children.length - 1].value)
+    enterName.value != ""
+      ? (user_name = enterName.value)
       : (user_name = "user_name");
     const user_result = await fetch(`/api/users/${user_name}`);
     const user_data = await user_result.json();
@@ -63,20 +78,20 @@ const getAllSchedule = async () => {
 const getScheduleByName = async (name) => {
   const result = await fetch(`/api/schedule/${name}`);
   const data = await result.json();
-  const id = data.id;  
+  const id = data.id;
 };
 
 // Запись нового значения в расписании по name
 
 const updateScheduleByName = async (name, content, user_name) => {
   const all_schedules = await fetch("/api/schedule");
-  const all_schedules_result = await all_schedules.json();  
+  const all_schedules_result = await all_schedules.json();
 
-  const includesResult = all_schedules_result.map((obj) => obj.name);  
+  const includesResult = all_schedules_result.map((obj) => obj.name);
 
   const result = await fetch(`/api/users/${user_name}`);
   const data = await result.json();
-  const user_id = data.id; 
+  const user_id = data.id;
 
   switch (includesResult.includes(name)) {
     case true:
@@ -106,7 +121,7 @@ const updateScheduleByName = async (name, content, user_name) => {
 
 const createYearPlane = () => {
   scheduleDescription.textContent = "";
-  const currentYearCalenderTable = currentYearCalender(2, 2025);  
+  const currentYearCalenderTable = currentYearCalender(2, 2025);
   let div = document.createElement("div");
 
   const calendar = document.getElementById("calendar");
@@ -130,24 +145,23 @@ const createYearPlane = () => {
         calendar.append(span);
         calendar.append(br1);
       }
-  
+
       const span = document.createElement("span");
       span.textContent = ` | ${el[1]} ${el[0]} | `;
       if (el[0] == "Sat" || el[0] == "Sun") {
         span.style.color = "brown";
         calendar.append(span);
       }
-  
+
       if (el[0] == "Mon") {
         calendar.append(span);
         const br = document.createElement("br");
         calendar.append(br);
       }
-  
-      calendar.append(span);
-    });    
-  }
 
+      calendar.append(span);
+    });
+  }
 
   const week = [
     "Monday",
@@ -201,12 +215,9 @@ const createYearPlane = () => {
                 // 300ms - типичный интервал для двойного касания
                 // Здесь выполняется действие для двойного касания
 
-                // const autho = document.getElementById("autho");
-
                 let user_name;
-                autho.children[autho.children.length - 1].value != ""
-                  ? (user_name =
-                      autho.children[autho.children.length - 1].value)
+                enterName.value != ""
+                  ? (user_name = enterName.value)
                   : (user_name = "user_name");
 
                 const content = input.value;
@@ -226,9 +237,8 @@ const createYearPlane = () => {
               case "Enter":
                 const content = input.value;
                 let user_name;
-                autho.children[autho.children.length - 1].value != ""
-                  ? (user_name =
-                      autho.children[autho.children.length - 1].value)
+                enterName.value != ""
+                  ? (user_name = enterName.value)
                   : (user_name = "user_name");
                 document.getElementById(name).textContent = content;
                 updateScheduleByName(name, content, user_name);
@@ -471,15 +481,15 @@ authoClick.addEventListener("click", async (event) => {
   let found = false;
 
   let user_name;
-  autho.children[autho.children.length - 1].value != ""
-    ? (user_name = autho.children[autho.children.length - 1].value)
+  enterName.value != ""
+    ? (user_name = enterName.value)
     : (user_name = "user_name");
 
   data.forEach((el) => {
     if (user_name === el.name) {
       curentUserId = el.id;
       nameTop = el.name;
-      wellcome.innerHTML = `Добро пожаловать, ${nameTop}!`;      
+      wellcome.innerHTML = `Добро пожаловать, ${nameTop}!`;
       found = true;
     }
   });
@@ -499,7 +509,7 @@ const getAllTasks = async () => {
 
   dataTasks.map(async (el) => {
     const user = await fetch(`/api/users/${el.performer}`);
-    const userData = await user.json();    
+    const userData = await user.json();
     const li = document.createElement("li");
     li.id = "task" + el.id;
     li.addEventListener("contextmenu", async (event) => {
@@ -602,3 +612,30 @@ const getAllTasks = async () => {
 };
 
 getAllTasks();
+
+const colorOfText = document.getElementById("colorOfText");
+const scheduleCell = document.getElementsByClassName("scheduleCell");
+const listOfcolor = [
+  "brown",
+  "cadetblue",
+  "coral",
+  "black",
+  "green",
+  "crimson",
+];
+
+listOfcolor.map((el) => {
+  const button = document.createElement("button");
+  button.style = `background: ${el}; margin: 5px;`;
+  button.textContent = el;
+  button.addEventListener("click", (event) => {
+    for (let index = 0; index < scheduleCell.length; index++) {
+      const element = scheduleCell[index];
+      element.lastChild.tagName == "SPAN"
+        ? (element.lastChild.style.color = button.textContent)
+        : false;
+    }
+  });
+
+  colorOfText.append(button);
+});
