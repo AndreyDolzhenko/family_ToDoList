@@ -628,11 +628,12 @@ listOfcolor.map((el) => {
   const button = document.createElement("button");
   button.style = `background: ${el}; margin: 5px;`;
   button.textContent = el;
+  button.id = el;
   button.addEventListener("click", (event) => {
     for (let index = 0; index < scheduleCell.length; index++) {
       const element = scheduleCell[index];
       element.lastChild.tagName == "SPAN"
-        ? (element.lastChild.style.color = button.textContent)
+        ? (element.lastChild.style.color = button.id)
         : false;
     }
   });
