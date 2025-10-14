@@ -19,7 +19,7 @@ document
       // console.log(password, "password", userIdResult.password);
 
       if (password !== userIdResult.password) {
-        const currentPassword = prompt("Enter current password:");
+        const currentPassword = prompt("This user exist. Enter current password:");
 
         if (currentPassword === userIdResult.password) {
           const response = await fetch(`api/users/${userIdResult.id}`, {
@@ -31,7 +31,7 @@ document
           const data = await response.json();
           alert("Данные изменены:" + "\n" + data.name + "\n" + data.team);
         } else {
-          alert("This user has other pass. Contact admin or create new user!");
+          alert("This user exist and has other pass. Contact admin or create new user!");
         }
       } else {
         const response = await fetch(`api/users/${userIdResult.id}`, {

@@ -40,7 +40,7 @@ exports.getAllTableNames = async (req, res) => {
       .json({ message: "Ошибка при получении schedule", error: error.message });
   }
 };
-
+// !!! function for backup
 const createBackupFile = (table, name) => {
     // Создаем папку backup, если она не существует
     const backupDir = path.join(__dirname, "../backup");

@@ -1,0 +1,46 @@
+{
+  "timestamp": "2025-10-14T09:10:27.221Z",
+  "count": 5,
+  "data": [
+    {
+      "id": 3,
+      "name": "Bogdan",
+      "team": "family",
+      "password": null,
+      "createdAt": "2025-10-06T13:33:59.149Z",
+      "updatedAt": "2025-10-06T13:33:59.149Z"
+    },
+    {
+      "id": 4,
+      "name": "user_name",
+      "team": "other",
+      "password": null,
+      "createdAt": "2025-10-07T12:14:16.494Z",
+      "updatedAt": "2025-10-07T12:14:16.494Z"
+    },
+    {
+      "id": 5,
+      "name": "Vova",
+      "team": "team",
+      "password": "3211sdf",
+      "createdAt": "2025-10-10T12:10:03.629Z",
+      "updatedAt": "2025-10-10T12:10:03.629Z"
+    },
+    {
+      "id": 2,
+      "name": "Demid",
+      "team": "family",
+      "password": "123",
+      "createdAt": "2025-10-06T13:33:51.429Z",
+      "updatedAt": "2025-10-10T12:37:48.632Z"
+    },
+    {
+      "id": 1,
+      "name": "Andrey",
+      "team": "other",
+      "password": "123654",
+      "createdAt": "2025-10-06T13:33:20.079Z",
+      "updatedAt": "2025-10-11T09:55:09.679Z"
+    }
+  ]
+}

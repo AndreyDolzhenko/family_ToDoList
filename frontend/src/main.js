@@ -403,7 +403,7 @@ const taskTableCreate = async () => {
         data.forEach((el) => {
           const option = document.createElement("option");
           option.value = el.id;
-          option.textContent = el.name;
+          // option.textContent = el.name;
           select.appendChild(option);
         });
         select.id = "performer";
