@@ -1,4 +1,3 @@
-
 const choiceOfWorkplace = document.getElementsByClassName("choiceOfWorkplace");
 const workPlace = document.getElementsByClassName("workPlace");
 const allTd = document.querySelectorAll("td");
@@ -26,17 +25,15 @@ scheduleTop.addEventListener("click", async (event) => {
   const user_result = await fetch(`/api/users/${user_name}`);
   const user_data = await user_result.json();
 
-  
   if (pass == user_data.password && user_name == user_data.name) {
     scheduleManagment();
     createYearPlane();
     getAllSchedule();
-    
+
     // console.log("password", user_data.name, user_data.password);
   } else {
     alert("Неверный логин или пароль!");
   }
-
 });
 tasksTop.addEventListener("click", (event) => tasksManagment());
 
@@ -640,3 +637,93 @@ listOfcolor.map((el) => {
 
   colorOfText.append(button);
 });
+
+///////////////// for Safary
+
+// td.addEventListener("contextmenu", handleContextMenu);
+// td.addEventListener("touchstart", handleTouchStart, { passive: false });
+
+// let touchStartTime;
+// let longPressTimer;
+
+// function handleTouchStart(event) {
+//   touchStartTime = Date.now();
+//   longPressTimer = setTimeout(() => {
+//     handleContextMenu(event);
+//   }, 500); // 500ms для длинного нажатия
+// }
+
+// function handleContextMenu(event) {
+//   event.preventDefault();
+//   event.stopPropagation();
+
+//   let name;
+//   event.target.parentElement.tagName == "TR"
+//     ? (name = event.target.id)
+//     : (name = event.target.parentElement.id);
+
+//   if (
+//     event.target.parentElement.lastChild.type != "text" &&
+//     event.target.lastChild.type != "text"
+//   ) {
+//     const input = document.createElement("input");
+//     input.type = "text";
+//     input.value = name;
+
+//     // Обработка отмены при перемещении
+//     const cancelInput = () => input.remove();
+
+//     document.addEventListener("touchmove", cancelInput, { once: true });
+//     document.addEventListener("scroll", cancelInput, { once: true });
+
+//     // Обработка двойного касания
+//     let lastTouchEnd = 0;
+//     const handleTouchend = function (event) {
+//       var now = Date.now();
+//       if (now - lastTouchEnd <= 300) {
+//         submitInput(input, name);
+//         event.preventDefault();
+//       }
+//       lastTouchEnd = now;
+//     };
+
+//     document.addEventListener("touchend", handleTouchend, { once: true });
+
+//     input.addEventListener("keyup", (event) => {
+//       switch (event.key) {
+//         case "Enter":
+//           submitInput(input, name);
+//           break;
+//         case "Escape":
+//           input.remove();
+//           break;
+//         default:
+//           break;
+//       }
+//     });
+
+//     // Автофокус и выделение текста
+//     td.append(input);
+//     input.focus();
+//     input.select();
+//   }
+// }
+
+// function submitInput(input, name) {
+//   const content = input.value;
+//   let user_name = enterName.value || "user_name";
+//   document.getElementById(name).textContent = content;
+//   updateScheduleByName(name, content, user_name);
+//   input.remove();
+// }
+
+// // Очистка таймера при обычном касании
+// td.addEventListener("touchend", () => {
+//   clearTimeout(longPressTimer);
+// });
+
+// td.addEventListener("touchmove", () => {
+//   clearTimeout(longPressTimer);
+// });
+
+/////////////////

@@ -2,10 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const { sequelize } = require("./models"); // Sequelize инстанс импортируется из папки models
+const { logUserAction } = require("./middleware/analytics");
+
+
 const app = express();
 
 app.use(express.json()); // для парсинга application/json
 app.use(express.urlencoded({ extended: true })); // для парсинга application/x-www-form-urlencoded
+
+// Middleware для логирования действий пользователей
+app.use("/api/", logUserAction);
 
 // Раздача статических файлов из папки public
 app.use(express.static(path.join(__dirname, "frontend")));
@@ -71,6 +77,9 @@ const PORT = process.env.PORT || 3000;
 app.get("/", (req, res) => {
   res.send("API для управления задачами работает!");
 });
+
+const analyticsRoutes = require("./routes/analytics.routes");
+app.use("/api/analytics", analyticsRoutes);
 
 const backupRoutes = require("./routes/backup.routes");
 app.use("/api/backup", backupRoutes);

@@ -16,7 +16,7 @@ exports.createUser = async (req, res) => {
 // READ: Получение всех user
 exports.getAllUsers = async (req, res) => {
   try {
-    console.log("????? ", req.params.name);
+    // console.log("????? ", req.params.name);
     const users = await User.findAll();
     res.status(200).json(users);
   } catch (error) {
